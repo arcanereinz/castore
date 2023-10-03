@@ -16,8 +16,23 @@
     "demo/*",
     "docs"
   ],
+  "targets": {
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node demo/implementation/serverless.ts",
+        "parallel": false
+      }
+    }
+  },
+  "comments": {
+    "deploy": "copy demo/implementation/.env.example to demo/implementation/.env and udpate as needed"
+  },
   "scripts": {
     "build-all": "nx run-many --target=build --all --parallel=4",
+    "deploy-direct": "nx run --target=sls-deploy demo-implementation:deploy",
+    "deploy-long": "cd demo/implementation && env $(cat .env | xargs) bash -c 'sls deploy'",
+    "deploy": "cd demo/implementation && bash -ac '. .env; sls deploy'",
     "check-audit": "check-audit --yarn",
     "graph": "nx dep-graph",
     "info": "nx run-many --target=sls-info --all --parallel=4",
